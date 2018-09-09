@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM jupyter/datascience-notebook
 
 USER root
 # Dependencies specific to barcode reading

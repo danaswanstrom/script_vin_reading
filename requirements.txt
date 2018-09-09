@@ -1,3 +1,5 @@
 pyzbar
 opencv-python
 boto3
+pandas
+requests
