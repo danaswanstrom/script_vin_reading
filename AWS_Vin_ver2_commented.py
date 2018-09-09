@@ -50,10 +50,6 @@ import datetime
 # Used if to get VIN information
 import requests
 
-# Only used if you are testing printing out an image
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-
 
 # In[3]:
 
