@@ -1,24 +1,13 @@
 
 # coding: utf-8
 
-# In[ ]:
-
-
 # To run this you will need to install the following on your Linux box
 # libzbar-dev 
 # libzbar0
 
-
-# In[1]:
-
-
 # Parameters
 s3_bucket_name = 'sample-vin-number-images'
 director_in_bucket_name = 'SampleImages'
-
-
-# In[2]:
-
 
 # Required to read from S3
 from io import BytesIO
@@ -50,14 +39,6 @@ import datetime
 # Used if to get VIN information
 import requests
 
-# Only used if you are testing printing out an image
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-
-
-# In[3]:
-
-
 # Create all our resources and clients we will need to interact with AWS
 # AWS credientials must have been provided in the docker startup bash script
 
@@ -70,31 +51,12 @@ s3_client = boto3.client('s3')
 # Create a boto3 bucket instance using bucket name parameter
 my_bucket = s3_resource.Bucket(s3_bucket_name)
 
-
-# In[4]:
-
-
-# Test to see if connection to S3 is working  Uncomment and run to test
-# for bucket in s3_resource.buckets.all():
-    #print(bucket.name)
-
-
-# In[5]:
-
-
 # Functions necessary to decode
 
 def decode(im) : 
   # Find barcodes and QR codes
   decodedObjects = pyzbar.decode(im)
-     
   return decodedObjects
-
-
-# Procedure starts in next cell
-
-# In[6]:
-
 
 # Get a list of all the files in your directory
 files = list(my_bucket.objects.filter(Prefix=director_in_bucket_name))
@@ -109,12 +71,7 @@ index = list(range(1,len(files)+1))
 # Creates the empty dataframe with dtype as object
 image_dataframe = pd.DataFrame(index=index, columns=['Photo_SN','Vin','Make','Model','ModelYear'])
 
-
-# In[7]:
-
-
-for index, file in enumerate(files, start = 0):
-    
+for index, file in enumerate(files, start = 0):    
     # Obtain the file from aws and load into memory
     image_object = my_bucket.Object(files[index].key)
     
@@ -160,9 +117,6 @@ for index, file in enumerate(files, start = 0):
 print("Done with Barcodes")
 
 
-# In[8]:
-
-
 # This sections requests vehicle information from the NHTSA website
 
 row_start = 1
@@ -183,9 +137,6 @@ for row in range(row_start, row_end):
         image_dataframe['ModelYear'][row] = ''
 
 
-# In[9]:
-
-
 # Upload the data to your S3 bucket as json
 
 # Create the json from the pandas dataframe
@@ -196,4 +147,3 @@ json_obj = s3_resource.Object(s3_bucket_name,str(datetime.datetime.now()) + 'Vin
 
 # Upload the object to s3
 json_obj.put(Body=dataframe_as_json)
-
