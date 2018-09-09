@@ -10,7 +10,7 @@ COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-ADD AWS_Vin_ver2_commented.py ./
+ADD AWS_Vin_ver3.py ./
 
-CMD [ "python", "./AWS_Vin_ver2_commented.py" ]
+CMD [ "python", "./AWS_Vin_ver3.py" ]
 
