@@ -4,10 +4,10 @@ AWS_ACCESS_KEY_ID=$(aws --profile default configure get aws_access_key_id)
 AWS_SECRET_ACCESS_KEY=$(aws --profile default configure get aws_secret_access_key)
 
 docker run \
-# Edit the next two lines with your information
+# Edit next two lines as needed
 -e S3_BUCKET='sample-vin-number-images' \
 -e S3_DIRECTORY='SampleImages' \
 -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
 -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-# This is the name of your docker image that you created
- script1
+# This is the name of your docker image
+script1
