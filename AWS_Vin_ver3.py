@@ -136,7 +136,8 @@ for row in range(row_start, row_end):
         image_dataframe['Model'][row] = ''
         image_dataframe['ModelYear'][row] = ''
 
-
+print("Done with vehicle data")
+        
 # Upload the data to your S3 bucket as json
 
 # Create the json from the pandas dataframe
@@ -147,3 +148,5 @@ json_obj = s3_resource.Object(s3_bucket_name,str(datetime.datetime.now()) + 'Vin
 
 # Upload the object to s3
 json_obj.put(Body=dataframe_as_json)
+
+print("Done with uploading json to the bucket:" + s3_bucket_name)
