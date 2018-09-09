@@ -5,9 +5,8 @@
 # libzbar-dev 
 # libzbar0
 
-# Parameters
-s3_bucket_name = 'sample-vin-number-images'
-director_in_bucket_name = 'SampleImages'
+# Used to read environment variables
+import os
 
 # Required to read from S3
 from io import BytesIO
@@ -38,6 +37,15 @@ import datetime
 
 # Used if to get VIN information
 import requests
+
+# Parameters hard coded
+# Uncomment and comment the section below
+# s3_bucket_name = 'sample-vin-number-images'
+# director_in_bucket_name = 'SampleImages'
+
+# Parameters pass in from Docker run script
+s3_bucket_name = os.environ['S3_BUCKET']
+director_in_bucket_name = os.environ['S3_DIRECTORY']
 
 # Create all our resources and clients we will need to interact with AWS
 # AWS credientials must have been provided in the docker startup bash script
