@@ -75,7 +75,7 @@ def decode(im) :
 files = list(my_bucket.objects.filter(Prefix=director_in_bucket_name))
 
 # Filter the files based on the string that was read in as an environmental variable
-matches_barcode_inicator = re.compile(r'_HQ_9', re.IGNORECASE)
+matches_barcode_inicator = re.compile(barcode_file_indicator_string, re.IGNORECASE)
 files = [f for f in files if matches_barcode_inicator.search(f.key)]
 
 # Creates list of numbers from 1 to the length of our photo list
