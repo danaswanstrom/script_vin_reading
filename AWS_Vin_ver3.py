@@ -46,6 +46,7 @@ import requests
 # Parameters pass in from Docker run script
 s3_bucket_name = os.environ['S3_BUCKET']
 director_in_bucket_name = os.environ['S3_DIRECTORY']
+barcode_file_indicator_string = os.environ['BARCODE_IND_STRING']
 
 # Create all our resources and clients we will need to interact with AWS
 # AWS credientials must have been provided in the docker startup bash script
@@ -68,10 +69,12 @@ def decode(im) :
 
 # Get a list of all the files in your directory
 files = list(my_bucket.objects.filter(Prefix=director_in_bucket_name))
+matches_barcode_inicator = re.compile(barcode_file_indicator_string, re.IGNORECASE)
+files = filter(matches_barcode_inicator.search, files)
 
 # The list of objects starts with the directory as the first item in the list
 # We remove that first item and keep the rest
-files = files[1:]
+# files = files[1:]
 
 # Creates list of numbers from 1 to the length of our photo list
 index = list(range(1,len(files)+1))
