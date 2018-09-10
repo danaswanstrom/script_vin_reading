@@ -47,6 +47,10 @@ import requests
 s3_bucket_name = os.environ['S3_BUCKET']
 director_in_bucket_name = os.environ['S3_DIRECTORY']
 barcode_file_indicator_string = os.environ['BARCODE_IND_STRING']
+print('***********')
+print('This script is only evaluating files that have ' + barcode_file_indicator_string +
+	' in the filename.')
+print('***********')
 
 # Create all our resources and clients we will need to interact with AWS
 # AWS credientials must have been provided in the docker startup bash script
@@ -69,12 +73,10 @@ def decode(im) :
 
 # Get a list of all the files in your directory
 files = list(my_bucket.objects.filter(Prefix=director_in_bucket_name))
-matches_barcode_inicator = re.compile(barcode_file_indicator_string, re.IGNORECASE)
-files = filter(matches_barcode_inicator.search, files)
 
-# The list of objects starts with the directory as the first item in the list
-# We remove that first item and keep the rest
-# files = files[1:]
+# Filter the files based on the string that was read in as an environmental variable
+matches_barcode_inicator = re.compile(r'_HQ_9', re.IGNORECASE)
+files = [f for f in files if matches_barcode_inicator.search(f.key)]
 
 # Creates list of numbers from 1 to the length of our photo list
 index = list(range(1,len(files)+1))
@@ -124,9 +126,9 @@ for index, file in enumerate(files, start = 0):
         else:
             image_dataframe['Vin'][index + 1] = vin_1
         
-        
+print('***********')        
 print("Done with Barcodes")
-
+print('***********')
 
 # This sections requests vehicle information from the NHTSA website
 
@@ -147,17 +149,23 @@ for row in range(row_start, row_end):
         image_dataframe['Model'][row] = ''
         image_dataframe['ModelYear'][row] = ''
 
-print("Done with vehicle data")
-        
+print('***********')
+print("Done with vehicle data import from NHTSA")
+print('***********')
+
 # Upload the data to your S3 bucket as json
 
 # Create the json from the pandas dataframe
 dataframe_as_json = image_dataframe.to_json(orient='index')
 
 # Create a new s3 object
-json_obj = s3_resource.Object(s3_bucket_name,str(datetime.datetime.now()) + 'Vin Numbers.json')
+json_file_name = str(datetime.datetime.now()) + '_Vin_Numbers.json'
+json_obj = s3_resource.Object(s3_bucket_name, json_file_name)
 
 # Upload the object to s3
 json_obj.put(Body=dataframe_as_json)
 
-print("Done with uploading json to the bucket:" + s3_bucket_name)
+print('***********')
+print('Done uploading the file ' + json_file_name) 
+print('to the bucket: ' + s3_bucket_name )
+print('***********')
